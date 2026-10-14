@@ -136,7 +136,50 @@ public:
 
     ////////////////////////////////////////////
 
-    
+
+    void memfree(void* ptr){
+        if(ptr == nullptr) return ;
+
+        block* p = memory ;
+        bool ptr_present = false ;
+
+        while(p != nullptr){
+            char* payload = reinterpret_cast<char*>(p) + HEADER_SIZE;
+            if(payload == ptr){
+                ptr_present = true ;;
+                if(p->free) ptr_present = false ;
+                break ;
+            }
+            p = p->next ;
+        }
+
+        if(!ptr_present) return ;
+
+        char* start = reinterpret_cast<char*>(ptr) - HEADER_SIZE ;
+        block* best = reinterpret_cast<block*>(start);
+        best->free = true ;
+        if(best->next != nullptr && best->next->free == true){
+            best->size = best->size + best->next->size + HEADER_SIZE ;
+            best->next = best->next->next ;
+        }
+        
+        block* q = memory ;
+        while(q != nullptr){
+            if(q->free){
+                if(q->next != nullptr && q->next->free == true){
+                    q->size = q->size + q->next->size + HEADER_SIZE ;
+                    q->next = q->next->next ;
+                }else q = q->next ;
+            }
+            else q = q->next ;
+        }
+
+        return ;
+    }
+
+
+
+    ///////////////////////////////
 void printBlocks() {
     cout << "\n========== ALLOCATOR BLOCKS ==========\n";
 
