@@ -180,38 +180,44 @@ public:
 
 
     ///////////////////////////////
-void printBlocks() {
-    cout << "\n========== ALLOCATOR BLOCKS ==========\n";
+    void printBlocks() {
+        cout << "\n========== ALLOCATOR BLOCKS ==========\n";
 
-    block* p = memory;
-    int index = 0;
+        block* p = memory;
+        int index = 0;
 
-    while (p != nullptr) {
-        char* header =
-            reinterpret_cast<char*>(p);
+        while (p != nullptr) {
+            char* header =
+                reinterpret_cast<char*>(p);
 
-        char* payload = header + HEADER_SIZE;
+            char* payload = header + HEADER_SIZE;
 
-        cout << "\nBlock #" << index << '\n';
-        cout << "Header address : " << static_cast<void*>(header) << '\n';
-        cout << "Payload address: " << static_cast<void*>(payload) << '\n';
-        cout << "Payload size   : " << p->size << " bytes\n";
-        cout << "Free           : " << boolalpha << p->free << '\n';
-        cout << "Next block     : " << p->next << '\n';
+            cout << "\nBlock #" << index << '\n';
+            cout << "Header address : " << static_cast<void*>(header) << '\n';
+            cout << "Payload address: " << static_cast<void*>(payload) << '\n';
+            cout << "Payload size   : " << p->size << " bytes\n";
+            cout << "Free           : " << boolalpha << p->free << '\n';
+            cout << "Next block     : " << p->next << '\n';
 
-        cout << "Header aligned : "
-             << (reinterpret_cast<uintptr_t>(header)
-                 % alignof(block) == 0) << '\n';
+            cout << "Header aligned : "
+                << (reinterpret_cast<uintptr_t>(header)
+                    % alignof(block) == 0) << '\n';
 
-        cout << "Payload aligned: "
-             << (reinterpret_cast<uintptr_t>(payload)
-                 % ALIGNMENT == 0) << '\n';
+            cout << "Payload aligned: "
+                << (reinterpret_cast<uintptr_t>(payload)
+                    % ALIGNMENT == 0) << '\n';
 
-        p = p->next;
-        index++;
+            p = p->next;
+            index++;
+        }
+
+        cout << "\n======================================\n";
     }
 
-    cout << "\n======================================\n";
-}
+    ~allocation(){
+        if(memory != nullptr){
+            VirtualFree(memory,0,MEM_RELEASE) ;
+        }
+    }
 
 };

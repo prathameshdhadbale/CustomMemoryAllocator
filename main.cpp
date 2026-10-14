@@ -7,20 +7,24 @@ using namespace std;
 int main() {
     allocation allocator;
 
-    void* a = allocator.memalloc(1000);
+    void* a = allocator.memalloc(25);
     cout << "Allocation A: " << a << '\n';
     allocator.printBlocks();
     
-    allocator.memfree(a) ;
+    void* b = allocator.memalloc(40);
+    cout << "Allocation B: " << b << '\n';
+    allocator.printBlocks();
+    
+    void* c = allocator.memalloc(80);
+    cout << "Allocation C: " << c << '\n';
+    allocator.printBlocks();
+    
+    allocator.memfree(b) ;
     allocator.printBlocks();
 
-    // void* b = allocator.memalloc(40);
-    // cout << "Allocation B: " << b << '\n';
-    // allocator.printBlocks();
-
-    // void* c = allocator.memalloc(80);
-    // cout << "Allocation C: " << c << '\n';
-    // allocator.printBlocks();
+    void* d = allocator.memalloc(40);
+    cout << "Allocation D: " << d << '\n';
+    allocator.printBlocks();
 
     return 0;
 }
