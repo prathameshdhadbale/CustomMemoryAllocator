@@ -1,4 +1,3 @@
-
 #include <windows.h>
 #include <iostream>
 #include <cstddef>
@@ -217,6 +216,7 @@ public:
     ~allocation(){
         if(memory != nullptr){
             VirtualFree(memory,0,MEM_RELEASE) ;
+            cout<<"memory released"<<'\n' ;
         }
     }
 
